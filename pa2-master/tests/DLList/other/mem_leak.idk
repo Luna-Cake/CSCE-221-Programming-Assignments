@@ -1,0 +1,12 @@
+g++ -std=c++17 DLList.cpp copy-DLList-main.cpp -o run-dll >> DEBUG 2>&1
+
+valgrind --leak-check=full --error-exitcode=1 ./run-dll
+EXIT_CODE=$? 
+if [ $EXIT_CODE -eq 0 ]; then 
+	echo true > OUTPUT
+	echo 'Test passed!'
+else 
+	echo false > OUTPUT
+	echo 'Memory leak detected!' >> DEBUG
+fi
+
