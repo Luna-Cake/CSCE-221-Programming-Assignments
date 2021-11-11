@@ -48,7 +48,9 @@ In this question, you will analyze the average search cost of a binary tree. For
 \subsection*{2.1 Linear Binary Tree}
 
 Find a formula for the average search cost of a linear binary tree in terms of the number of nodes in the tree $n$. Show every step of your derivation. (Note: You may wish to familiarize yourself with the closed form for an arithmetic series.)
-
+\\
+\\
+$n$ is the number of nodes in the binary tree.
 \begin{equation}
     g_l(n) = (\sum_{k=1}^{n} k) \div n
 \end{equation}
@@ -60,15 +62,11 @@ Find a formula for the average search cost of a linear binary tree in terms of t
 \subsection*{2.2 Perfect Binary Tree}
 
 Find a formula for the average search cost of a perfect binary tree in terms of the number of nodes in the tree $n$. Show every step of your derivation. (Note: You may wish to familiarize yourself with a geometric series.)
-
+\\
+\\
+$n$ is the number of nodes in the binary tree.
 \begin{equation}
     g_p(n) = (\sum_{k=1}^{log_{2}(n + 1)} k * 2^{k - 1}) \div n
-\end{equation}
-
-Using the summation of a finite geometric series formula:
-
-\begin{equation}
-    g_p(n) = \ -(1 - 2^{log_{2}(n + 1)}) \times (log_{2}(n + 1))!
 \end{equation}
 
 \subsection*{2.3 Experimental Verification}
