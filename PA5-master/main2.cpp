@@ -18,14 +18,17 @@ int main()
     // std::cout << b.test << std::endl;
     Graph<std::string> test;
 
-    ifstream input("input-cycle.data");
+    ifstream input("input.data");
     if (!input) {
         std::cout << "Wrong or nonexisting input file\n";
         exit(1);
     }
 
     test.buildGraph(input);
-    std::cout << test.size() << std::endl;
+    test.topological_sort();
+    test.displayGraph(std::cout);
+    test.print_top_sort(std::cout);
+    // std::cout << test.size() << std::endl;
     // test.displayGraph(std::cout);
     // test.compute_indegree();
 }

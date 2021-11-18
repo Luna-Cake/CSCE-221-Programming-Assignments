@@ -46,7 +46,7 @@ class VertexCompare
 public:
   bool operator()(Vertex<T> v1, Vertex<T> v2){
     //todo - implement here
-    return false;
+    return (v1.top_num < v2.top_num);
   }
 };
 
@@ -109,9 +109,59 @@ public:
     return node_set.size();
   }
 
+  bool detect_cycle(std::unordered_map<T, bool> visited, Vertex<T> node) {
+    for (size_t i = 0; i < node.adj_list.size(); i++) {
+      if (visited.find(node.adj_list[i])->second == true)
+        return true;
+      auto v = visited.find(node.adj_list[i]);
+      v->second = true;
+      return detect_cycle(visited, at(node.adj_list[i]));
+    }
+    return false;
+  }
+
+  void assign_top(std::unordered_map<T, bool>* visited, std::stack<T>* order, Vertex<T> node) {
+    // std::cout << "CURR NODE: " << node.label << std::endl;
+
+    auto visit_record = visited->find(node.label);
+
+    if (visit_record->second)
+      return;
+
+    visit_record->second = true;
+
+    for (size_t i = 0; i < node.adj_list.size(); i++) {
+      auto curr_node = visited->find(node.adj_list[i]);
+      if (!curr_node->second) {
+        assign_top(visited, order, at(node.adj_list[i]));
+      }
+    }
+    order->push(node.label);
+    auto v = node_set.find(node.label);
+    v->second.top_num = order->size();
+    // std::cout << node.label << " " << v->second.top_num << std::endl;
+  }
+
   // topological sort
   // return true if successful, false on failure (cycle)
-  bool topological_sort(void){}; // Part 2
+  bool topological_sort(void){
+    std::unordered_map<T, bool> visited;
+    for (auto v : node_set)
+      visited.insert({v.first, false});
+    
+    if (detect_cycle(visited, node_set.begin()->second))
+      return false;
+  
+    for (auto v : visited)
+      v.second = false;
+
+    std::stack<T> order;
+    for (auto v : node_set)
+      assign_top(&visited, &order, v.second);
+    
+
+    return true;
+  }; // Part 2
 
   // find indegree
   void compute_indegree(void){
@@ -122,10 +172,6 @@ public:
         node->second.set_indegree(curr.indegree + 1);
       }
     }
-
-    for (auto v : node_set) {
-      std::cout << "NODE: " << v.first << " DEGREE: " << v.second.indegree << std::endl;
-    }
   } // Part 2
 
   // print topological sort into o
@@ -133,7 +179,16 @@ public:
   void print_top_sort(ostream& o, bool addNewline=true)
   { 
     //TODO - implement things here
-    
+    std::priority_queue<Vertex<T>, std::vector<Vertex<T>>, VertexCompare<T>> print_order;
+
+    for (auto v : node_set)
+      print_order.push(v.second);
+
+    while (!print_order.empty()) {
+      o << print_order.top().label << " ";
+      print_order.pop();
+    }
+
     if(addNewline){o << '\n';};
   }; // Part 2
 };
